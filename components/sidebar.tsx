@@ -11,6 +11,7 @@ import {
   Package,
   ShoppingCart,
   BarChart,
+  User,
 } from "lucide-react";
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -69,6 +70,17 @@ export default function Sidebar() {
           >
             <ShoppingCart className="w-5 h-5" />
             <span className={labelClasses}>Orders</span>
+          </Link>
+          <Link
+            href="/dashboard/customers"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition-all duration-200 ${
+              pathname === "/dashboard/customers"
+                ? "bg-purple-600 text-white font-semibold shadow-md"
+                : "text-gray-300 hover:bg-slate-400"
+            }`}
+          >
+            <User className="w-5 h-5" />
+            <span className={labelClasses}>Customer</span>
           </Link>
           <Link
             href="/dashboard/products"
