@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { UserPlus } from "lucide-react";
 import CustomersList from "@/app/dashboard/customers/CustomersList";
+import CustomerModal from "@/app/dashboard/customers/Modal";
 import { Users } from "@/types/users";
 import { toast } from "sonner";
 
@@ -51,6 +52,13 @@ export default function Customers() {
       toast.error("Product not found");
       return;
     }
+    setFormData({
+    username: userToUpdate.username,
+    email: userToUpdate.email,
+    contact: userToUpdate.contact,
+    address: userToUpdate.address,
+    updatedAt: new Date(),
+    });
 
     setEditUserId(userToUpdate._id);
     setIsEditMode(true);
@@ -105,6 +113,12 @@ export default function Customers() {
           users={users}
           onUpdate={handleUpdate}
           onDelete={handleDelete}
+          showForm={setShowForm}
+        />
+        <CustomerModal
+          showForm={showForm}
+          formData={formData}
+          isEditMode={isEditMode}
         />
       </div>
 

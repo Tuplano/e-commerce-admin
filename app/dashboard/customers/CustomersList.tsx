@@ -1,15 +1,17 @@
 import React from "react";
 import { Users } from "@/types/users";
-import { Mail, Phone, MapPin, Calendar, Edit, Trash2 } from "lucide-react";
+import { Mail, Phone, MapPin, Calendar, Edit, Trash2, User } from "lucide-react";
 
 export default function CustomerList({
   users,
   onUpdate,
   onDelete,
+  showForm,
 }: {
   users: Users[];
   onUpdate: (id: string) => void;
   onDelete: (id: string) => void;
+  showForm: (id: boolean) => void;
 }) {
   return (
     <>
@@ -100,9 +102,21 @@ export default function CustomerList({
         </div>
 
         {users.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-500">No customers found.</div>
-          </div>
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+          <User className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No User found
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Get started by adding User
+          </p>
+          <button
+            onClick={() => showForm(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            Add Your First User
+          </button>
+        </div>
         )}
       </div>
     </>
