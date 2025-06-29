@@ -1,13 +1,9 @@
-
-
 export interface Users {
-  _id: string;
-  username?: string;
-  password?: string;
+  _id?: string;               
+  username: string;
   email: string;
-  contact?: string;
-  address?: string;
-  role?: "user";
-  createdAt: Date;
-  updatedAt: Date;
+  contact: string;
+  address: string;
+  createdAt?: Date;       
+  updatedAt?: Date | null;   
 }

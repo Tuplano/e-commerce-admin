@@ -231,6 +231,13 @@ export default function AdminProductPage() {
           </div>
         </div>
 
+        <ProductList
+          products={products}
+          onDelete={handleDelete}
+          onUpdate={handleUpdate}
+          showForm={setShowForm}
+        />
+
         <ProductFormModal
           show={showForm}
           formData={formData}
@@ -243,13 +250,6 @@ export default function AdminProductPage() {
           onChange={handleInputChange}
           onImageChange={handleImageChange}
           onSubmit={handleSubmit}
-        />
-
-        <ProductList
-          products={products}
-          onDelete={handleDelete}
-          onUpdate={handleUpdate}
-          showForm={setShowForm}
         />
       </div>
       {totalPages > 1 && (

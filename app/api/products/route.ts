@@ -31,7 +31,6 @@ export async function POST(req: Request) {
   }
 }
 
-// ✅ READ (GET)
 export async function GET(req: Request) {
   try {
     await connectToDatabase();

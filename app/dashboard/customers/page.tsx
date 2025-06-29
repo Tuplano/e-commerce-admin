@@ -3,11 +3,20 @@ import React, { useState, useEffect } from "react";
 import { UserPlus } from "lucide-react";
 import CustomersList from "@/app/dashboard/customers/CustomersList";
 import { Users } from "@/types/users";
+import { toast } from "sonner";
 
 export default function Customers() {
   const [users, setUser] = useState<Users[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  const [formData, setFormData] = useState<Users>({
+    username: "",
+    email: "",
+    contact: "",
+    address: "",
+    updatedAt: null,
+  });
 
   const fetchUsers = async (page: number = 1, limit: number = 12) => {
     try {
@@ -30,6 +39,44 @@ export default function Customers() {
   useEffect(() => {
     fetchUsers(currentPage);
   }, [currentPage]);
+
+  //for updating user
+  const [showForm, setShowForm] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editUserId, setEditUserId] = useState<string | null>(null);
+
+  const handleUpdate = (id: string) => {
+    const userToUpdate = users.find((user) => user._id === id);
+    if (!userToUpdate) {
+      toast.error("Product not found");
+      return;
+    }
+
+    setEditUserId(userToUpdate._id);
+    setIsEditMode(true);
+    setShowForm(true);
+  };
+  //for deleting user
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+
+    try {
+      const res = await fetch(`/api/customers/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        const errorMessage = data.message || "Failed to delete account";
+        toast.error(errorMessage);
+        return;
+      }
+      toast.success("Deleted Succesfully");
+      setUser(users.filter((user) => user._id !== id));
+    } catch (err) {
+      console.error("Error deleting user:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -54,8 +101,13 @@ export default function Customers() {
           </div>
         </div>
 
-        <CustomersList users={users} />
+        <CustomersList
+          users={users}
+          onUpdate={handleUpdate}
+          onDelete={handleDelete}
+        />
       </div>
+
       {totalPages > 1 && (
         <div className="flex justify-center mt-6 space-x-2">
           <button
