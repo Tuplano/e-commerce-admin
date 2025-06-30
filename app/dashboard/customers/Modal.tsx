@@ -7,16 +7,22 @@ export default function ProductModal({
   showForm,
   isEditMode,
   formData,
+  onClose,
+  onChange,
+  onSubmit,
 }: {
   showForm: boolean;
   isEditMode: boolean;
   formData: UserDataType;
+  onClose: () => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (e: FormEvent) => void;
 }) {
   if (!showForm) return null;
 
   return (
     <>
-      <form>
+      <form onSubmit={onSubmit}>
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
             <div className="p-6 border-b border-gray-200">
@@ -32,8 +38,9 @@ export default function ProductModal({
                 </label>
                 <input
                   type="text"
-                  name="name"
+                  name="username"
                   value={formData.username}
+                  onChange={onChange}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                   placeholder="Enter product name"
@@ -47,6 +54,7 @@ export default function ProductModal({
                 <input
                   type="text"
                   name="email"
+                  onChange={onChange}
                   value={formData.email}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
@@ -61,6 +69,7 @@ export default function ProductModal({
                 <input
                   type="text"
                   name="contact"
+                  onChange={onChange}
                   value={formData.contact}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg"
@@ -73,6 +82,7 @@ export default function ProductModal({
                 </label>
                 <textarea
                   name="address"
+                  onChange={onChange}
                   value={formData.address}
                   required
                   rows={3}
@@ -94,6 +104,7 @@ export default function ProductModal({
                 </button>
                 <button
                   type="button"
+                  onClick={onClose}
                   className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg"
                 >
                   Cancel

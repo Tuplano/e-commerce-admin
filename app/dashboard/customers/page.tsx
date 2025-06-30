@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { UserPlus } from "lucide-react";
 import CustomersList from "@/app/dashboard/customers/CustomersList";
 import CustomerModal from "@/app/dashboard/customers/Modal";
@@ -18,6 +18,10 @@ export default function Customers() {
     address: "",
     updatedAt: null,
   });
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const fetchUsers = async (page: number = 1, limit: number = 12) => {
     try {
@@ -53,11 +57,11 @@ export default function Customers() {
       return;
     }
     setFormData({
-    username: userToUpdate.username,
-    email: userToUpdate.email,
-    contact: userToUpdate.contact,
-    address: userToUpdate.address,
-    updatedAt: new Date(),
+      username: userToUpdate.username,
+      email: userToUpdate.email,
+      contact: userToUpdate.contact,
+      address: userToUpdate.address,
+      updatedAt: userToUpdate.updatedAt,
     });
 
     setEditUserId(userToUpdate._id);
@@ -86,6 +90,67 @@ export default function Customers() {
     }
   };
 
+  //submitting
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const endpoint = isEditMode
+        ? `/api/customers/${editUserId}`
+        : "/api/customers";
+
+      const method = isEditMode ? "PUT" : "POST";
+
+      const res = await fetch(endpoint, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          contact: formData.contact,
+          address: formData.address,
+          updatedAt: formData.updatedAt,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        const errorMessage = data.message || "Failed to save User";
+        toast.error(errorMessage);
+        return;
+      }
+
+      if (res.status !== 204) {
+        const data = await res.json();
+        console.log("User saved:", data);
+      }
+
+      toast.success(
+        isEditMode
+          ? "User updated successfully"
+          : "User added successfully"
+      );
+
+      fetchUsers();
+
+      // Reset
+      setFormData({
+          username: "",
+          email: "",
+          contact: "",
+          address: "",
+          updatedAt: null,
+      });
+      setShowForm(false);
+      setIsEditMode(false);
+      setEditUserId(null);
+    } catch (err: any) {
+      toast.error(err.message || "An error occurred while saving the user");
+      console.error("Error submitting user:", err);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -119,6 +184,13 @@ export default function Customers() {
           showForm={showForm}
           formData={formData}
           isEditMode={isEditMode}
+          onClose={() => {
+            setShowForm(false);
+            setIsEditMode(false);
+            setEditUserId(null);
+          }}
+          onChange={handleInputChange}
+          onSubmit={handleSubmit}
         />
       </div>
 

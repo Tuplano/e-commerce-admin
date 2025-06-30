@@ -1,10 +1,10 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/user";
 
 // DELETE User
 export async function DELETE(
-  request: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   const userId = params.id;
@@ -36,34 +36,39 @@ export async function DELETE(
 
 // PATCH (Update) User
 export async function PUT(
-  request: NextRequest,
+  req: Request,
   { params }: { params: { id: string } }
 ) {
   const userId = params.id;
-  const body = await request.json();
+  const body = await req.json();
+  const { username, email, contact, address } = body;
 
   try {
     await connectToDatabase();
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $set: body },
-      { new: true, runValidators: true }
-    );
+    const user = await User.findById(userId);
 
-    if (!updatedUser) {
+    if (!user) {
       return NextResponse.json(
         { message: "User not found" },
         { status: 404 }
       );
     }
 
+    user.username = username ?? user.username;
+    user.email = email ?? user.email;
+    user.contact = contact ?? user.contact;
+    user.address = address ?? user.address;
+    user.updatedAt = new Date(); 
+
+    const updatedUser = await user.save(); 
+
     return NextResponse.json(
       { message: "User updated successfully", data: updatedUser },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating User:", error);
+    console.error("Error updating user:", error);
     return NextResponse.json(
       { message: "Internal Server Error", error },
       { status: 500 }
