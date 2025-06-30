@@ -1,7 +1,6 @@
 import React from "react";
 import { ChangeEvent, FormEvent } from "react";
 import { UserDataType } from "@/types/users";
-import { DollarSign } from "lucide-react";
 
 export default function ProductModal({
   showForm,

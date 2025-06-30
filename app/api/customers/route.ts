@@ -1,6 +1,34 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
-import user from "@/models/user";
+import User  from "@/models/user";
+
+export async function POST(req: Request) {
+  try {
+    await connectToDatabase();
+    const body = await req.json();
+    const { username, email, contact, address } = body;
+
+    const newUser = new User({
+      username,
+      email,
+      contact,
+      address,
+    });
+
+    await newUser.save();
+
+    return NextResponse.json(
+      { message: "User created successfully", User: newUser },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.log(error)
+    return NextResponse.json(
+      { message: "Failed to create user", error },
+      { status: 500 }
+    );
+  }
+}
 
 export async function GET(req: Request) {
   try {
@@ -11,8 +39,8 @@ export async function GET(req: Request) {
     const limit = parseInt(searchParams.get("limit") || "12");
     const skip = (page - 1) * limit;
 
-const users = await user.find().select("-password").skip(skip).limit(limit);
-    const total = await user.countDocuments();
+const users = await User.find().select("-password").skip(skip).limit(limit);
+    const total = await User.countDocuments();
 
     return NextResponse.json(
       {

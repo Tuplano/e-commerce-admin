@@ -76,7 +76,7 @@ export default function CustomerList({
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900 flex items-center">
                       <Calendar className="w-4 h-4 mr-1" />
-                      {customer.createdAt}
+                      {new Date(customer.createdAt).toLocaleString()}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">

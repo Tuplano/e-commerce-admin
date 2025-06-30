@@ -151,6 +151,18 @@ export default function Customers() {
       console.error("Error submitting user:", err);
     }
   };
+
+  
+  const handleAddUser = () => {
+      setFormData({
+          username: "",
+          email: "",
+          contact: "",
+          address: "",
+          updatedAt: null,
+      });
+    setShowForm(true);
+  };
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
@@ -166,7 +178,9 @@ export default function Customers() {
               </p>
             </div>
             <div className="mt-4 sm:mt-0">
-              <button className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button 
+              onClick={handleAddUser}
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 <UserPlus className="w-5 h-5 mr-2" />
                 Add Customer
               </button>
