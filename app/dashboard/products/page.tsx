@@ -231,12 +231,33 @@ export default function AdminProductPage() {
           </div>
         </div>
 
-        <ProductList
-          products={products}
-          onDelete={handleDelete}
-          onUpdate={handleUpdate}
-          showForm={setShowForm}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+          <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No products found
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Get started by adding your first product
+          </p>
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            Add Your First Product
+          </button>
+        </div>          ) : (
+            products.map((product) => (
+              <ProductList
+                key={product._id}
+                product={product}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate}
+              />
+            ))
+          )}
+        </div>
 
         <ProductFormModal
           show={showForm}
