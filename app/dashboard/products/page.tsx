@@ -10,6 +10,9 @@ export default function AdminProductPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+const handleSizesChange = (updatedSizes: { size: string; stock: number }[]) => {
+  setFormData((prev) => ({ ...prev, sizes: updatedSizes }));
+};
 
   const fetchProducts = async (page: number = 1, limit: number = 12) => {
     try {
@@ -35,7 +38,7 @@ export default function AdminProductPage() {
   const [formData, setFormData] = useState<AddProductFormData>({
     name: "",
     price: 0,
-    stock: 0,
+    sizes: [],
     description: "",
     category: "",
     image: [],
@@ -81,6 +84,16 @@ export default function AdminProductPage() {
         : "/api/products";
 
       const method = isEditMode ? "PUT" : "POST";
+      
+      const dataToSend = {
+  name: formData.name,
+  price: formData.price,
+  sizes: formData.sizes,
+  description: formData.description,
+  category: formData.category,
+  image: uploadedImageUrls,
+};
+
 
       const res = await fetch(endpoint, {
         method,
@@ -90,7 +103,7 @@ export default function AdminProductPage() {
         body: JSON.stringify({
           name: formData.name,
           price: formData.price,
-          stock: formData.stock,
+          sizes: formData.sizes,
           description: formData.description,
           category: formData.category,
           image: uploadedImageUrls,
@@ -100,7 +113,7 @@ export default function AdminProductPage() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         const errorMessage = data.message || "Failed to save product";
-        toast.error(errorMessage);
+        toast.error(errorMessage)
         return;
       }
 
@@ -121,7 +134,7 @@ export default function AdminProductPage() {
       setFormData({
         name: "",
         price: 0,
-        stock: 0,
+        sizes: [],
         description: "",
         category: "",
         image: [],
@@ -150,7 +163,7 @@ export default function AdminProductPage() {
     setFormData({
       name: productToUpdate.name,
       price: productToUpdate.price,
-      stock: productToUpdate.stock,
+      sizes: productToUpdate.sizes,
       description: productToUpdate.description,
       category: productToUpdate.category,
       image: productToUpdate.image || [],
@@ -189,7 +202,7 @@ export default function AdminProductPage() {
     setFormData({
       name: "",
       price: 0,
-      stock: 0,
+      sizes: [],
       description: "",
       category: "",
       image: [],
@@ -271,6 +284,7 @@ export default function AdminProductPage() {
           onChange={handleInputChange}
           onImageChange={handleImageChange}
           onSubmit={handleSubmit}
+          onSizesChange={handleSizesChange}
         />
       </div>
       {totalPages > 1 && (

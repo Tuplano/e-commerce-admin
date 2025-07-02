@@ -6,12 +6,12 @@ export async function POST(req: Request) {
   try {
     await connectToDatabase();
     const body = await req.json();
-    const { name, price, stock, description, category, image } = body;
+    const { name, price, sizes, description, category, image } = body;
 
     const newProduct = new Product({
       name,
       price,
-      stock,
+      sizes,
       description,
       category,
       image,
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     return NextResponse.json(
-      { message: "Failed to create product", error },
+      { message: error },
       { status: 500 }
     );
   }

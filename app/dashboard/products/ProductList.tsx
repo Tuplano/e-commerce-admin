@@ -9,7 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import {  FetchProductProps } from "@/types/product";
+import { FetchProductProps } from "@/types/product";
 
 export default function ProductCard({
   product,
@@ -91,7 +91,9 @@ export default function ProductCard({
               <DollarSign className="h-4 w-4 text-green-600" />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Price</p>
+              <p className="text-xs text-gray-500 uppercase tracking-wide">
+                Price
+              </p>
               <p className="text-lg font-bold text-green-600">
                 ₱{product.price.toFixed(2)}
               </p>
@@ -99,18 +101,18 @@ export default function ProductCard({
           </div>
 
           <div className="text-right">
-            <p className="text-xs text-gray-500 uppercase tracking-wide">Stock</p>
-            <p
-              className={`text-lg font-bold ${
-                product.stock < 10
-                  ? "text-red-600"
-                  : product.stock < 25
-                  ? "text-yellow-600"
-                  : "text-green-600"
-              }`}
-            >
-              {product.stock}
+            <p className="text-xs text-gray-500 uppercase tracking-wide">
+              Stock / Sizes
             </p>
+            {product.sizes?.length > 0 && (
+              <div className="flex text-xs text-gray-600 gap-4 mt-1">
+                {product.sizes.map((item, index) => (
+                  <div key={index}>
+                    <span className="font-semibold">{item.size}</span>: {item.stock}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
