@@ -18,3 +18,9 @@ export interface AddProductFormData {
  image: string[];
 }
     
+
+export interface FetchProductProps {
+  product: Product;
+  onUpdate: (id: string) => void;
+  onDelete: (id: string) => void;
+}

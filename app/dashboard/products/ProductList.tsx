@@ -9,19 +9,13 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { Product } from "@/types/product";
-
-interface ProductCardProps {
-  product: Product;
-  onUpdate: (id: string) => void;
-  onDelete: (id: string) => void;
-}
+import {  FetchProductProps } from "@/types/product";
 
 export default function ProductCard({
   product,
   onUpdate,
   onDelete,
-}: ProductCardProps) {
+}: FetchProductProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const hasImages = Array.isArray(product.image) && product.image.length > 0;
 
