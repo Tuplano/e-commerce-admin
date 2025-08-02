@@ -1,7 +1,7 @@
-import cookie from "cookie";
+import { serialize } from "cookie";
 
 export async function GET(): Promise<Response> {
-  const logoutCookie = cookie.serialize("adminToken", "", {
+  const logoutCookie = serialize("adminToken", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",

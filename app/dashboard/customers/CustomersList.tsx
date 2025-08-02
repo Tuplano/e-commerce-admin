@@ -1,6 +1,14 @@
 import React from "react";
 import { Users } from "@/types/users";
-import { Mail, Phone, MapPin, Calendar, Edit, Trash2, User } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Edit,
+  Trash2,
+  User,
+} from "lucide-react";
 
 export default function CustomerList({
   users,
@@ -76,19 +84,21 @@ export default function CustomerList({
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900 flex items-center">
                       <Calendar className="w-4 h-4 mr-1" />
-                      {new Date(customer.createdAt).toLocaleString()}
+                      {customer.createdAt
+                        ? new Date(customer.createdAt).toLocaleString()
+                        : "No date"}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
                       <button
-                        onClick={() => onUpdate(customer._id)}
+                        onClick={() => onUpdate(customer._id!)}
                         className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => onDelete(customer._id)}
+                        onClick={() => onDelete(customer._id!)}
                         className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -102,21 +112,19 @@ export default function CustomerList({
         </div>
 
         {users.length === 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-          <User className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No User found
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Get started by adding User
-          </p>
-          <button
-            onClick={() => showForm(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-          >
-            Add Your First User
-          </button>
-        </div>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+            <User className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No User found
+            </h3>
+            <p className="text-gray-600 mb-6">Get started by adding User</p>
+            <button
+              onClick={() => showForm(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              Add Your First User
+            </button>
+          </div>
         )}
       </div>
     </>

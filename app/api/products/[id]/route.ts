@@ -5,9 +5,10 @@ import Product from "@/models/product";
 // DELETE product
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const productId = params.id;
+  const { id } = await params;
+  const productId = id;
 
   try {
     await connectToDatabase();
@@ -37,9 +38,10 @@ export async function DELETE(
 // PATCH (Update) product
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const productId = params.id;
+  const { id } = await params;
+  const productId = id;
   const body = await request.json();
 
   try {

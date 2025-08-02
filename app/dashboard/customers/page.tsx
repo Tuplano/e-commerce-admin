@@ -19,9 +19,11 @@ export default function Customers() {
     updatedAt: null,
   });
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const handleInputChange = (
+  e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+};
 
   const fetchUsers = async (page: number = 1, limit: number = 12) => {
     try {
@@ -64,7 +66,7 @@ export default function Customers() {
       updatedAt: userToUpdate.updatedAt,
     });
 
-    setEditUserId(userToUpdate._id);
+    setEditUserId(userToUpdate._id || null);
     setIsEditMode(true);
     setShowForm(true);
   };
@@ -85,7 +87,7 @@ export default function Customers() {
       }
       toast.success("Deleted Succesfully");
       setUser(users.filter((user) => user._id !== id));
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Error deleting user:", err);
     }
   };
@@ -144,8 +146,10 @@ export default function Customers() {
       setShowForm(false);
       setIsEditMode(false);
       setEditUserId(null);
-    } catch (err: any) {
-      toast.error(err.message || "An error occurred while saving the user");
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      toast.error(errorMessage);
       console.error("Error submitting user:", err);
     }
   };

@@ -1,6 +1,6 @@
 import React from "react";
 import { ChangeEvent, FormEvent } from "react";
-import { UserDataType } from "@/types/users";
+import { Users } from "@/types/users";
 
 export default function ProductModal({
   showForm,
@@ -12,9 +12,9 @@ export default function ProductModal({
 }: {
   showForm: boolean;
   isEditMode: boolean;
-  formData: UserDataType;
+  formData: Users;
   onClose: () => void;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onSubmit: (e: FormEvent) => void;
 }) {
   if (!showForm) return null;
@@ -91,7 +91,10 @@ export default function ProductModal({
               </div>
 
               <div className="text-sm text-gray-500">
-                Last updated: {new Date(formData.updatedAt).toLocaleString()}
+                Last updated:{" "}
+                {formData.updatedAt
+                  ? new Date(formData.updatedAt).toLocaleString()
+                  : "N/A"}
               </div>
 
               <div className="flex space-x-3 pt-4">

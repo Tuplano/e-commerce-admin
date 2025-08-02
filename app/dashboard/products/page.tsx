@@ -10,9 +10,11 @@ export default function AdminProductPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-const handleSizesChange = (updatedSizes: { size: string; stock: number }[]) => {
-  setFormData((prev) => ({ ...prev, sizes: updatedSizes }));
-};
+  const handleSizesChange = (
+    updatedSizes: { size: string; stock: number }[]
+  ) => {
+    setFormData((prev) => ({ ...prev, sizes: updatedSizes }));
+  };
 
   const fetchProducts = async (page: number = 1, limit: number = 12) => {
     try {
@@ -43,10 +45,15 @@ const handleSizesChange = (updatedSizes: { size: string; stock: number }[]) => {
     category: "",
     image: [],
   });
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const handleInputChange = (
+  e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+) => {
+  const { name, value } = e.target;
+  setFormData((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,15 +91,6 @@ const handleSizesChange = (updatedSizes: { size: string; stock: number }[]) => {
         : "/api/products";
 
       const method = isEditMode ? "PUT" : "POST";
-      
-      const dataToSend = {
-  name: formData.name,
-  price: formData.price,
-  sizes: formData.sizes,
-  description: formData.description,
-  category: formData.category,
-  image: uploadedImageUrls,
-};
 
 
       const res = await fetch(endpoint, {
@@ -113,7 +111,7 @@ const handleSizesChange = (updatedSizes: { size: string; stock: number }[]) => {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         const errorMessage = data.message || "Failed to save product";
-        toast.error(errorMessage)
+        toast.error(errorMessage);
         return;
       }
 
@@ -143,8 +141,10 @@ const handleSizesChange = (updatedSizes: { size: string; stock: number }[]) => {
       setShowForm(false);
       setIsEditMode(false);
       setEditProductId(null);
-    } catch (err: any) {
-      toast.error(err.message || "An error occurred while saving the product");
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "An unknown error occurred";
+      toast.error(errorMessage);
       console.error("Error submitting product:", err);
     }
   };
@@ -246,21 +246,22 @@ const handleSizesChange = (updatedSizes: { size: string; stock: number }[]) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-          <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No products found
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Get started by adding your first product
-          </p>
-          <button
-            onClick={() => setShowForm(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-          >
-            Add Your First Product
-          </button>
-        </div>          ) : (
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+              <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No products found
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Get started by adding your first product
+              </p>
+              <button
+                onClick={() => setShowForm(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                Add Your First Product
+              </button>
+            </div>
+          ) : (
             products.map((product) => (
               <ProductList
                 key={product._id}

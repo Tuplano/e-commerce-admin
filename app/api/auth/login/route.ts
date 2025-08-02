@@ -2,23 +2,20 @@ import connectToDatabase from "@/lib/mongodb";
 import Admin from "@/models/admin";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import cookie from "cookie";
+import { serialize } from "cookie";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export async function POST(req: Request): Promise<Response> {
   await connectToDatabase();
 
-  const { email, password }: { email: string; password: string } =
-    await req.json();
+  const { email, password }: { email: string; password: string } = await req.json();
 
   const admin = await Admin.findOne({ email });
   if (!admin) {
     return new Response(
       JSON.stringify({ message: "Invalid email or password" }),
-      {
-        status: 401,
-      }
+      { status: 401 }
     );
   }
 
@@ -26,9 +23,7 @@ export async function POST(req: Request): Promise<Response> {
   if (!isMatch) {
     return new Response(
       JSON.stringify({ message: "Invalid email or password" }),
-      {
-        status: 401,
-      }
+      { status: 401 }
     );
   }
 
@@ -42,7 +37,7 @@ export async function POST(req: Request): Promise<Response> {
     { expiresIn: "1d" }
   );
 
-  const cookieHeader = cookie.serialize("adminToken", token, {
+  const cookieHeader = serialize("adminToken", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",

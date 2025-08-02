@@ -1,18 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/user";
 
 // DELETE User
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const userId = params.id;
+  const { id } = await params;
 
   try {
     await connectToDatabase();
 
-    const deletedUser = await User.findByIdAndDelete(userId);
+    const deletedUser = await User.findByIdAndDelete(id);
 
     if (!deletedUser) {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting User:", error);
+    console.error("Error deleting user:", error);
     return NextResponse.json(
       { message: "Internal Server Error", error },
       { status: 500 }
@@ -34,19 +34,19 @@ export async function DELETE(
   }
 }
 
-// PATCH (Update) User
+// PUT (Update) User
 export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> } 
 ) {
-  const userId = params.id;
+  const { id } = await params;
   const body = await req.json();
   const { username, email, contact, address } = body;
 
   try {
     await connectToDatabase();
 
-    const user = await User.findById(userId);
+    const user = await User.findById(id);
 
     if (!user) {
       return NextResponse.json(
@@ -59,9 +59,9 @@ export async function PUT(
     user.email = email ?? user.email;
     user.contact = contact ?? user.contact;
     user.address = address ?? user.address;
-    user.updatedAt = new Date(); 
+    user.updatedAt = new Date();
 
-    const updatedUser = await user.save(); 
+    const updatedUser = await user.save();
 
     return NextResponse.json(
       { message: "User updated successfully", data: updatedUser },

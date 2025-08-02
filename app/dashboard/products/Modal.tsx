@@ -17,8 +17,10 @@ export default function ProductModal({
   isEditMode: boolean;
   formData: AddProductFormData;
   onClose: () => void;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: FormEvent) => void;
+onChange: (
+  e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+) => void; 
+onSubmit: (e: FormEvent) => void;
   onImageChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onSizesChange: (updatedSizes: { size: string; stock: number }[]) => void;
 }) {
